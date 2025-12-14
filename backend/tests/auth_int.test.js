@@ -1,6 +1,13 @@
 const request = require("supertest");
 const app = require("../src/app");
 
+beforeEach(() => {
+  // ✅ ensure users exists before resetting
+  app.locals.users = [];
+});
+
+
+
 describe("Auth Routes", () => {
 
   it("should register a new user", async () => {
@@ -123,14 +130,14 @@ describe("POST /api/auth/login", () => {
       .send({
         name: "Test User",
         email: "login@test.com",
-        password: "abc123"
+        password: "password123"
       });
 
     const res = await request(app)
       .post("/api/auth/login")
       .send({
         email: "login@test.com",
-        password: "abc123"
+        password: "password123"
       });
 
     expect(res.statusCode).toBe(200);
