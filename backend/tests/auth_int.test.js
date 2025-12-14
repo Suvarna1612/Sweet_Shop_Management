@@ -60,6 +60,48 @@ it("should fail if password is too weak", async () => {
 });
 
 
+it("should not allow registering with an existing email", async () => {
+  const user = {
+    name: "User One",
+    email: "duplicate@example.com",
+    password: "password123"
+  };
+
+  await request(app).post("/api/auth/register").send(user);
+
+  const res = await request(app)
+    .post("/api/auth/register")
+    .send(user);
+
+  expect(res.statusCode).toBe(409);
+});
+
+
+it("should not allow registering with an existing username", async () => {
+  const user1 = {
+    name: "testuser",
+    email: "user1@example.com",
+    password: "password123"
+  };
+
+  const user2 = {
+    name: "testuser",
+    email: "user2@example.com",
+    password: "password123"
+  };
+
+  await request(app).post("/api/auth/register").send(user1);
+
+  const res = await request(app)
+    .post("/api/auth/register")
+    .send(user2);
+
+  expect(res.statusCode).toBe(409);
+});
+
+
+
+
 
 
 
