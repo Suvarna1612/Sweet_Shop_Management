@@ -22,7 +22,7 @@ describe("Auth Routes", () => {
     .post("/api/auth/register")
     .send({ password: "password123" });
 
-  expect(res.statusCode).toBenp(400);
+  expect(res.statusCode).toBe(400);
 });
 
 
