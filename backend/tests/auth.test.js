@@ -6,6 +6,8 @@ const {
 } = require("../src/utils/auth");
 
 
+// this test checks if the password is hashed or not, ie not equal to the actual password and length greater thab 50
+
 describe('Auth Utils', () => {
   describe('hashPassword', () => {
     it('should hash a password', async () => {
@@ -18,6 +20,9 @@ describe('Auth Utils', () => {
     });
   });
 
+
+// password and hashed password should be same, used to check for authorisation purposes
+
   describe('comparePassword', () => {
     it('should return true for correct password', async () => {
       const password = 'testpassword123';
@@ -27,6 +32,9 @@ describe('Auth Utils', () => {
       expect(isMatch).toBe(true);
     });
   });
+
+
+// generating and verifying a jwt token
 
   describe('generateToken', () => {
     it('should generate a JWT token', () => {

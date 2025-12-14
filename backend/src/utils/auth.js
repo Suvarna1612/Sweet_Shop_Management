@@ -1,27 +1,27 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const hashPassword = async (password) => {
-  throw new Error("Not implemented");
+  return await bcrypt.hash(password, 10);
 };
 
 const comparePassword = async (password, hashedPassword) => {
-  throw new Error("Not implemented");
+  return await bcrypt.compare(password, hashedPassword);
 };
 
 const generateToken = (payload) => {
-  throw new Error("Not implemented");
+  return jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
 };
 
 const verifyToken = (token) => {
-  throw new Error("Not implemented");
+  return jwt.verify(token, process.env.JWT_SECRET);
 };
 
 module.exports = {
   hashPassword,
   comparePassword,
   generateToken,
-  verifyToken
+  verifyToken,
 };
-
