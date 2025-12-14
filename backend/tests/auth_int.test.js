@@ -1,9 +1,9 @@
 const request = require("supertest");
 const app = require("../src/app");
+const { users } = require("../src/controllers/authController");
 
 beforeEach(() => {
-  // ✅ ensure users exists before resetting
-  app.locals.users = [];
+  users.length = 0;
 });
 
 
