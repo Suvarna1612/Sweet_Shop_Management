@@ -6,7 +6,7 @@ describe("Sweet Model", () => {
     const sweetData = {
       name: "Gulab Jamun",
       price: 50,
-      category: "Indian Sweets",
+      category: "Milk Sweets",
       description: "Soft milk-solid balls soaked in sugar syrup"
     };
 
@@ -56,7 +56,7 @@ describe("Sweet Model", () => {
     const sweetData = {
       name: "Kaju Katli",
       price: -100,
-      category: "Dry-Fruit",
+      category: "Dry Fruit Sweets",
       description: "Cashew-based sweet"
     };
 
