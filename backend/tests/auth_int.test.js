@@ -26,4 +26,14 @@ describe("Auth Routes", () => {
 });
 
 
+it("should fail if password is missing", async () => {
+  const res = await request(app)
+    .post("/api/auth/register")
+    .send({ email: "test@example.com" });
+
+  expect(res.statusCode).toBe(400);
+});
+
+
+
 });

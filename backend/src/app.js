@@ -8,11 +8,11 @@ app.post("/api/auth/register", (req, res) => {
 
 
     
-  const { email } = req.body;
+  const { email ,password} = req.body;
 
-  if (!email) {
+  if (!email || !password) {
     return res.status(400).json({
-      message: "Email is required",
+      message: "Email and password are required",
     });
   }
 
