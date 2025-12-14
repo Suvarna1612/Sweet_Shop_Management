@@ -16,4 +16,14 @@ describe("Auth Routes", () => {
     expect(res.body).toHaveProperty("token");
   });
 
+
+  it(" if email is missing,it should fail", async () => {
+  const res = await request(app)
+    .post("/api/auth/register")
+    .send({ password: "password123" });
+
+  expect(res.statusCode).toBenp(400);
+});
+
+
 });
