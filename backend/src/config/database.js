@@ -2,9 +2,16 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
+    // Skip connection if already connected (for tests)
+    if (mongoose.connection.readyState === 1) {
+      return mongoose.connection;
+    }
+
     const conn = await mongoose.connect(process.env.MONGODB_URI);
 
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(`MongoDB Connected: ${conn.connection.host}`);
+    }
     
     // Handle connection events
     mongoose.connection.on('error', (err) => {
@@ -12,12 +19,18 @@ const connectDB = async () => {
     });
 
     mongoose.connection.on('disconnected', () => {
-      console.log('MongoDB disconnected');
+      if (process.env.NODE_ENV !== 'test') {
+        console.log('MongoDB disconnected');
+      }
     });
 
+    return conn;
   } catch (error) {
     console.error('Database connection error:', error.message);
-    process.exit(1);
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit(1);
+    }
+    throw error;
   }
 };
 

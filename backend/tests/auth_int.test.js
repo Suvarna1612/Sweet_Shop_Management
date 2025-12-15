@@ -1,9 +1,10 @@
 const request = require("supertest");
 const app = require("../src/app");
+const User = require("../src/models/User");
 
-beforeEach(() => {
-  
-  app.locals.users.length = 0;
+beforeEach(async () => {
+  // Clear all users from database before each test
+  await User.deleteMany({});
 });
 
 
@@ -149,11 +150,11 @@ describe("POST /api/auth/login", () => {
       password: "password123"
     });
 
-  const users = app.locals.users;
-  const savedUser = users.find(u => u.email === "hash@test.com");
+  const savedUser = await User.findOne({ email: "hash@test.com" });
 
   expect(savedUser).toBeDefined();
   expect(savedUser.password).not.toBe("password123");
+  expect(savedUser.password).toMatch(/^\$2[aby]\$\d+\$/); // bcrypt hash pattern
 });
 
 
