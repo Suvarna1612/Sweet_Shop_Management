@@ -56,8 +56,14 @@ const Dashboard = () => {
       setSweets(prevSweets => 
         prevSweets.map(sweet => {
           if (sweet._id === sweetId) {
-            console.log('Updating sweet quantity from', sweet.quantity, 'to', response.data.data.remainingStock);
-            return { ...sweet, quantity: response.data.data.remainingStock };
+            const newQuantity = response.data.data.remainingStock;
+            console.log('Updating sweet quantity from', sweet.quantity, 'to', newQuantity);
+            return { 
+              ...sweet, 
+              quantity: newQuantity,
+              // Force re-render by updating a timestamp
+              lastUpdated: Date.now()
+            };
           }
           return sweet;
         })
@@ -65,6 +71,9 @@ const Dashboard = () => {
       
       setSuccess(response.data.message);
       setTimeout(() => setSuccess(null), 3000);
+      
+      // Optionally reload all sweets to ensure consistency
+      // loadSweets(searchParams);
     } catch (error) {
       console.error('Error purchasing sweet:', error);
       setError(error.response?.data?.message || 'Failed to purchase sweet');

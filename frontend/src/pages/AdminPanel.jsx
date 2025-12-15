@@ -127,8 +127,14 @@ const AdminPanel = () => {
       setSweets(prevSweets => 
         prevSweets.map(sweet => {
           if (sweet._id === sweetId) {
-            console.log('Admin updating sweet quantity from', sweet.quantity, 'to', response.data.data.remainingStock);
-            return { ...sweet, quantity: response.data.data.remainingStock };
+            const newQuantity = response.data.data.remainingStock;
+            console.log('Admin updating sweet quantity from', sweet.quantity, 'to', newQuantity);
+            return { 
+              ...sweet, 
+              quantity: newQuantity,
+              // Force re-render by updating a timestamp
+              lastUpdated: Date.now()
+            };
           }
           return sweet;
         })
@@ -136,6 +142,9 @@ const AdminPanel = () => {
       
       setSuccess(response.data.message);
       setTimeout(() => setSuccess(null), 3000);
+      
+      // Optionally reload all sweets to ensure consistency
+      // loadSweets(searchParams);
     } catch (error) {
       console.error('Error purchasing sweet:', error);
       setError(error.response?.data?.message || 'Failed to purchase sweet');
@@ -152,8 +161,14 @@ const AdminPanel = () => {
       setSweets(prevSweets => 
         prevSweets.map(sweet => {
           if (sweet._id === sweetId) {
-            console.log('Updating sweet quantity from', sweet.quantity, 'to', response.data.data.newStock);
-            return { ...sweet, quantity: response.data.data.newStock };
+            const newQuantity = response.data.data.newStock;
+            console.log('Updating sweet quantity from', sweet.quantity, 'to', newQuantity);
+            return { 
+              ...sweet, 
+              quantity: newQuantity,
+              // Force re-render by updating a timestamp
+              lastUpdated: Date.now()
+            };
           }
           return sweet;
         })
@@ -161,6 +176,9 @@ const AdminPanel = () => {
       
       setSuccess(response.data.message);
       setTimeout(() => setSuccess(null), 3000);
+      
+      // Optionally reload all sweets to ensure consistency
+      // loadSweets(searchParams);
     } catch (error) {
       console.error('Error restocking sweet:', error);
       setError(error.response?.data?.message || 'Failed to restock sweet');

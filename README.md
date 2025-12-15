@@ -124,7 +124,7 @@ I used **ChatGPT**, **GitHub Copilot**, and **Kiro** as learning and development
 **Backend Development:**
 - ChatGPT helped me understand **Test-Driven Development (TDD)** and write Jest tests
 - Used AI to debug test failures and understand authentication flows
-- Guidance on password hashing, JWT implementation, and API error handling
+
 - Final logic was written and adjusted manually
 
 **Frontend Development:**
@@ -139,11 +139,10 @@ I used **ChatGPT**, **GitHub Copilot**, and **Kiro** as learning and development
 
 ### Learning Outcomes
 Through AI-assisted development, I gained:
-- Full-stack JavaScript proficiency
+
 - Test-Driven Development experience
-- Authentication/authorization implementation
-- Debugging and problem-solving skills
-- Frontend-backend integration expertise
+- Authentication/authorization Debugging efficiently
+
 
 **Note:** AI tools were used for learning assistance. All code was reviewed, understood, and modified to meet project requirements.
 
