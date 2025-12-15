@@ -3,6 +3,11 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/database");
 
+// Production optimizations (install these packages: npm install compression helmet express-rate-limit)
+// const compression = require('compression');
+// const helmet = require('helmet');
+// const rateLimit = require('express-rate-limit');
+
 const app = express();
 
 // Connect to database
