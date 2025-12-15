@@ -1,11 +1,10 @@
 const request = require("supertest");
 const app = require("../src/app");
-const { users } = require("../src/controllers/authController");
 
 beforeEach(() => {
-  users.length = 0;
+  
+  app.locals.users.length = 0;
 });
-
 
 
 describe("Auth Routes", () => {
@@ -110,10 +109,6 @@ it("should not allow registering with an existing username", async () => {
 
 
 
-
-
-
-
 });
 
 
@@ -123,20 +118,19 @@ it("should not allow registering with an existing username", async () => {
 
 describe("POST /api/auth/login", () => {
 
-  it("should login successfully with valid credentials", async () => {
-    // register user first
+  it("should allow login with correct password even if stored hashed", async () => {
     await request(app)
       .post("/api/auth/register")
       .send({
-        name: "Test User",
-        email: "login@test.com",
+        name: "Hash Login",
+        email: "hashlogin@test.com",
         password: "password123"
       });
 
     const res = await request(app)
       .post("/api/auth/login")
       .send({
-        email: "login@test.com",
+        email: "hashlogin@test.com",
         password: "password123"
       });
 
@@ -144,6 +138,24 @@ describe("POST /api/auth/login", () => {
     expect(res.body.success).toBe(true);
     expect(res.body).toHaveProperty("token");
   });
+
+
+  it("should store password in hashed form", async () => {
+  await request(app)
+    .post("/api/auth/register")
+    .send({
+      name: "Hash User",
+      email: "hash@test.com",
+      password: "password123"
+    });
+
+  const users = app.locals.users;
+  const savedUser = users.find(u => u.email === "hash@test.com");
+
+  expect(savedUser).toBeDefined();
+  expect(savedUser.password).not.toBe("password123");
+});
+
 
   it("should fail if email is not registered", async () => {
     const res = await request(app)
