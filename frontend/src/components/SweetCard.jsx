@@ -3,29 +3,31 @@ import { useAuth } from '../context/AuthContext';
 
 const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, onRestock, isAdminView = false }) => {
   const { isAdmin } = useAuth();
-  const [purchaseQuantity, setPurchaseQuantity] = useState(1);
-  const [restockQuantity, setRestockQuantity] = useState(1);
+  const [purchaseQuantity, setPurchaseQuantity] = useState('');
+  const [restockQuantity, setRestockQuantity] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handlePurchase = async () => {
-    if (loading || sweet.quantity < purchaseQuantity) return;
+    const quantity = parseInt(purchaseQuantity) || 1;
+    if (loading || sweet.quantity < quantity || quantity < 1 || sweet.quantity === 0) return;
     
     setLoading(true);
     try {
-      await onPurchase(sweet._id, purchaseQuantity);
-      setPurchaseQuantity(1);
+      await onPurchase(sweet._id, quantity);
+      setPurchaseQuantity('');
     } finally {
       setLoading(false);
     }
   };
 
   const handleRestock = async () => {
-    if (loading || restockQuantity < 1) return;
+    const quantity = parseInt(restockQuantity) || 1;
+    if (loading || quantity < 1) return;
     
     setLoading(true);
     try {
-      await onRestock(sweet._id, restockQuantity);
-      setRestockQuantity(1);
+      await onRestock(sweet._id, quantity);
+      setRestockQuantity('');
     } finally {
       setLoading(false);
     }
@@ -129,16 +131,22 @@ const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, onRestock, isAdminView
                 min="1"
                 max={sweet.quantity}
                 value={purchaseQuantity}
-                onChange={(e) => setPurchaseQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                placeholder="Qty"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === '' || (parseInt(value) >= 1 && parseInt(value) <= sweet.quantity)) {
+                    setPurchaseQuantity(value);
+                  }
+                }}
                 className="quantity-input"
                 disabled={sweet.quantity === 0 || loading}
               />
               <button
                 onClick={handlePurchase}
-                disabled={sweet.quantity === 0 || purchaseQuantity > sweet.quantity || loading}
+                disabled={sweet.quantity === 0 || loading}
                 className={`btn ${sweet.quantity === 0 ? 'btn-secondary' : 'btn-success'}`}
               >
-                {loading ? 'Processing...' : sweet.quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+                {loading ? 'Processing...' : sweet.quantity === 0 ? 'Out of Stock' : 'Purchase'}
               </button>
             </div>
           )}
@@ -151,7 +159,13 @@ const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, onRestock, isAdminView
                   type="number"
                   min="1"
                   value={restockQuantity}
-                  onChange={(e) => setRestockQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  placeholder="Qty"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || parseInt(value) >= 1) {
+                      setRestockQuantity(value);
+                    }
+                  }}
                   className="quantity-input"
                   disabled={loading}
                 />
