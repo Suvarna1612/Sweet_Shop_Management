@@ -106,10 +106,13 @@ cd backend
 npm test              # Run all tests
 npm run test:coverage # Coverage report
 ```
+### For Admin login 
+username: admin@sksweets.com
+password: Admin@123
 
 **Sweet Categories:** Bengali Sweets, Dry Fruit Sweets, Milk Sweets, Pure Ghee Sweets, Sugarless Sweets, Chocolates
 
-`
+
 
 ## 🤖 AI Usage Disclosure
 
@@ -144,35 +147,11 @@ Through AI-assisted development, I gained:
 
 **Note:** AI tools were used for learning assistance. All code was reviewed, understood, and modified to meet project requirements.
 
-## 📄 License
 
-MIT License © 2025 - See [LICENSE](LICENSE) file for details
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## 👥 Author
 
 **Suvarna** - [@Suvarna1612](https://github.com/Suvarna1612)
 
-## 🙏 Acknowledgments
-
-- Inspired by traditional Indian sweet shops
-- Built with modern web technologies
-- Special thanks to the open-source community
-
----
-
-<div align="center">
-
-**Made with ❤️ and 🍬**
-
-[⬆ Back to Top](#-sweet-shop-management-system)
 
 </div>

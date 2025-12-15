@@ -24,10 +24,19 @@ const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, onRestock, isAdminView
     const quantity = parseInt(restockQuantity) || 1;
     if (loading || quantity < 1) return;
     
+    // Check if onRestock function is provided
+    if (!onRestock) {
+      console.error('onRestock function not provided to SweetCard');
+      return;
+    }
+    
     setLoading(true);
     try {
+      console.log('Restocking sweet:', sweet._id, 'quantity:', quantity);
       await onRestock(sweet._id, quantity);
       setRestockQuantity('');
+    } catch (error) {
+      console.error('Restock error:', error);
     } finally {
       setLoading(false);
     }
@@ -123,8 +132,8 @@ const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, onRestock, isAdminView
         )}
         
         <div className="sweet-actions">
-          {/* Purchase Section - Only show for regular users or non-admin view */}
-          {!isAdminView && (
+          {/* Purchase Section - Only show for regular users (not admins) and not in admin view */}
+          {!isAdminView && !isAdmin() && (
             <div className="purchase-section">
               <input
                 type="number"
