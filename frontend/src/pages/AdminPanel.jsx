@@ -120,14 +120,18 @@ const AdminPanel = () => {
   const handlePurchase = async (sweetId, quantity) => {
     try {
       setError(null);
+      console.log('Admin purchasing sweet:', sweetId, 'quantity:', quantity);
       const response = await sweetAPI.purchase(sweetId, quantity);
+      console.log('Admin purchase response:', response.data);
       
       setSweets(prevSweets => 
-        prevSweets.map(sweet => 
-          sweet._id === sweetId 
-            ? { ...sweet, quantity: response.data.data.remainingStock }
-            : sweet
-        )
+        prevSweets.map(sweet => {
+          if (sweet._id === sweetId) {
+            console.log('Admin updating sweet quantity from', sweet.quantity, 'to', response.data.data.remainingStock);
+            return { ...sweet, quantity: response.data.data.remainingStock };
+          }
+          return sweet;
+        })
       );
       
       setSuccess(response.data.message);
@@ -141,14 +145,18 @@ const AdminPanel = () => {
   const handleRestock = async (sweetId, quantity) => {
     try {
       setError(null);
+      console.log('Restocking sweet:', sweetId, 'quantity:', quantity);
       const response = await sweetAPI.restock(sweetId, quantity);
+      console.log('Restock response:', response.data);
       
       setSweets(prevSweets => 
-        prevSweets.map(sweet => 
-          sweet._id === sweetId 
-            ? { ...sweet, quantity: response.data.data.newStock }
-            : sweet
-        )
+        prevSweets.map(sweet => {
+          if (sweet._id === sweetId) {
+            console.log('Updating sweet quantity from', sweet.quantity, 'to', response.data.data.newStock);
+            return { ...sweet, quantity: response.data.data.newStock };
+          }
+          return sweet;
+        })
       );
       
       setSuccess(response.data.message);

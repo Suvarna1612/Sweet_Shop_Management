@@ -48,15 +48,19 @@ const Dashboard = () => {
   const handlePurchase = async (sweetId, quantity) => {
     try {
       setError(null);
+      console.log('Purchasing sweet:', sweetId, 'quantity:', quantity);
       const response = await sweetAPI.purchase(sweetId, quantity);
+      console.log('Purchase response:', response.data);
       
       // Update the sweet in the local state
       setSweets(prevSweets => 
-        prevSweets.map(sweet => 
-          sweet._id === sweetId 
-            ? { ...sweet, quantity: response.data.data.remainingStock }
-            : sweet
-        )
+        prevSweets.map(sweet => {
+          if (sweet._id === sweetId) {
+            console.log('Updating sweet quantity from', sweet.quantity, 'to', response.data.data.remainingStock);
+            return { ...sweet, quantity: response.data.data.remainingStock };
+          }
+          return sweet;
+        })
       );
       
       setSuccess(response.data.message);
