@@ -19,6 +19,9 @@ describe("Auth Routes", () => {
         password: "password123"
       });
 
+    console.log('Response status:', res.statusCode);
+    console.log('Response body:', res.body);
+    
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("token");
   });

@@ -9,7 +9,15 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.FRONTEND_URL || 'https://your-project.vercel.app', // Replace with your actual Vercel URL
+    /\.vercel\.app$/ // Allow all Vercel preview deployments
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // Error handling middleware
