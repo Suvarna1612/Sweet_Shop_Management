@@ -68,7 +68,9 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       setLoading(true);
       
+      console.log('AuthContext: Making registration request with:', userData);
       const response = await authAPI.register(userData);
+      console.log('AuthContext: Registration response:', response.data);
       const { token, user: newUser } = response.data;
       
       localStorage.setItem('token', token);
@@ -77,7 +79,10 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
+      console.error('AuthContext: Registration error:', error);
+      console.error('AuthContext: Error response:', error.response?.data);
       const errorMessage = error.response?.data?.message || 'Registration failed';
+      console.log('AuthContext: Setting error message:', errorMessage);
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {

@@ -21,9 +21,10 @@ const Register = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  // Clear error only on component mount, not on every render
   useEffect(() => {
     clearError();
-  }, [clearError]);
+  }, []); // Empty dependency array
 
   const validateForm = () => {
     const newErrors = {};
@@ -69,7 +70,7 @@ const Register = () => {
       [name]: value
     }));
     
-    // Clear error when user starts typing
+    // Clear field-specific validation errors when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -77,7 +78,8 @@ const Register = () => {
       }));
     }
     
-    clearError();
+    // Only clear global API error if user is making changes to fix the issue
+    // This allows the error to persist until user tries to fix it
   };
 
   const handleSubmit = async (e) => {
@@ -87,13 +89,20 @@ const Register = () => {
       return;
     }
 
+    // Clear any previous API errors before making new request
+    clearError();
+    
     setLoading(true);
     const { confirmPassword, ...userData } = formData;
+    console.log('Registering user:', userData);
     const result = await register(userData);
+    console.log('Registration result:', result);
     setLoading(false);
 
     if (result.success) {
       navigate('/dashboard', { replace: true });
+    } else {
+      console.log('Registration failed with error:', result.error);
     }
   };
 
@@ -106,10 +115,20 @@ const Register = () => {
         </div>
           
           {error && (
-            <div className="alert alert-error">
-              {error}
+            <div className="alert alert-error" style={{ 
+              backgroundColor: '#fee2e2', 
+              border: '1px solid #fecaca', 
+              color: '#dc2626', 
+              padding: '12px', 
+              borderRadius: '6px', 
+              marginBottom: '16px',
+              fontSize: '14px'
+            }}>
+              <strong>Error:</strong> {error}
             </div>
           )}
+          
+
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">

@@ -9,9 +9,11 @@ const generateToken = (userId) => {
 
 const register = async (req, res) => {
   try {
+    console.log('Registration request body:', req.body);
     const { email, password, username } = req.body;
 
     if (!email || !password || !username) {
+      console.log('Missing required fields:', { email: !!email, password: !!password, username: !!username });
       return res.status(400).json({
         success: false,
         message: "Email, password, and username are required",
@@ -19,15 +21,18 @@ const register = async (req, res) => {
     }
 
     // Check if user already exists
+    console.log('Checking for existing user with email:', email, 'or username:', username);
     const existingUser = await User.findOne({
       $or: [{ email }, { username }]
     });
 
     if (existingUser) {
       const field = existingUser.email === email ? 'Email' : 'Username';
+      const errorMessage = `${field} already exists`;
+      console.log('User already exists:', errorMessage);
       return res.status(409).json({
         success: false,
-        message: `${field} already exists`,
+        message: errorMessage,
       });
     }
 
