@@ -107,65 +107,9 @@ npm test              # Run all tests
 npm run test:coverage # Coverage report
 ```
 
-##  API Endpoints
-
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/auth/register` | User registration | Public |
-| POST | `/api/auth/login` | User login | Public |
-| GET | `/api/sweets` | Get all sweets | Required |
-| POST | `/api/sweets` | Create sweet | Admin |
-| PUT | `/api/sweets/:id` | Update sweet | Admin |
-| DELETE | `/api/sweets/:id` | Delete sweet | Admin |
-| POST | `/api/sweets/:id/purchase` | Purchase sweet | Required |
-| GET | `/health` | Health check | Public |
-
 **Sweet Categories:** Bengali Sweets, Dry Fruit Sweets, Milk Sweets, Pure Ghee Sweets, Sugarless Sweets, Chocolates
 
-### Example API Requests
-
-**Register:**
-```bash
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"John Doe","email":"john@example.com","password":"Test@123"}'
-```
-
-**Create Sweet (Admin):**
-```bash
-curl -X POST http://localhost:5000/api/sweets \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Rasgulla","category":"Bengali Sweets","price":150,"quantity":50,"description":"Soft spongy sweet"}'
-```
-
-## 🚀 Deployment
-
-### Backend (Heroku/Railway)
-1. Set environment variables (PORT, MONGODB_URI, JWT_SECRET)
-2. Connect MongoDB Atlas for production database
-3. Deploy backend code
-
-### Frontend (Vercel/Netlify)
-1. Build: `npm run build`
-2. Deploy `dist` folder
-3. Set `VITE_API_URL` to backend URL
-
-## 🔧 Troubleshooting
-
-**MongoDB Connection Failed:**
-- Ensure MongoDB is running: `mongod --version`
-- Check MONGODB_URI in .env file
-- For Atlas: Verify IP whitelist and credentials
-
-**CORS Errors:**
-- Verify backend is running on port 5000
-- Check if frontend API URL is correct
-- Ensure CORS is enabled in backend
-
-**Tests Failing:**
-- Clear cache: `npm test -- --clearCache`
-- Reinstall dependencies: `rm -rf node_modules && npm install`
+`
 
 ## 🤖 AI Usage Disclosure
 
