@@ -1,82 +1,121 @@
-const users = [];
+const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 
-const register = (req, res) => {
-  const { email, password, name } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({
-      success: false,
-      message: "Email and password are required",
-    });
-  }
-
-  const emailFormat = /^\S+@\S+\.\S+$/;
-  if (!emailFormat.test(email)) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid email format",
-    });
-  }
-
-  if (password.length < 6) {
-    return res.status(400).json({
-      success: false,
-      message: "Password must be at least 6 characters long",
-    });
-  }
-
-  const emailExists = users.find(u => u.email === email);
-  if (emailExists) {
-    return res.status(409).json({
-      success: false,
-      message: "Email already exists",
-    });
-  }
-
-  if (name) {
-    const nameExists = users.find(u => u.name === name);
-    if (nameExists) {
-      return res.status(409).json({
-        success: false,
-        message: "Username already exists",
-      });
-    }
-  }
-
-  users.push({ email, password, name });
-
-  return res.status(201).json({
-    success: true,
-    token: "token",
+const generateToken = (userId) => {
+  return jwt.sign({ userId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN || '7d'
   });
 };
 
-const login = (req, res) => {
-  const { email, password } = req.body;
+const register = async (req, res) => {
+  try {
+    const { email, password, username } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({
+    if (!email || !password || !username) {
+      return res.status(400).json({
+        success: false,
+        message: "Email, password, and username are required",
+      });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }]
+    });
+
+    if (existingUser) {
+      const field = existingUser.email === email ? 'Email' : 'Username';
+      return res.status(409).json({
+        success: false,
+        message: `${field} already exists`,
+      });
+    }
+
+    // Create new user
+    const user = new User({
+      email,
+      password,
+      username
+    });
+
+    await user.save();
+
+    // Generate token
+    const token = generateToken(user._id);
+
+    res.status(201).json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        username: user.username,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({
       success: false,
-      message: "Email and password are required",
+      message: 'Server error during registration'
     });
   }
+};
 
-  const user = users.find(u => u.email === email);
-  if (!user || user.password !== password) {
-    return res.status(401).json({
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found. Please register first.",
+      });
+    }
+
+    // Check password
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
+    // Generate token
+    const token = generateToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        username: user.username,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({
       success: false,
-      message: "Invalid email or password",
+      message: 'Server error during login'
     });
   }
-
-  res.status(200).json({
-    success: true,
-    token: "token",
-  });
 };
 
 module.exports = {
   register,
-  login,
-  users 
+  login
 };

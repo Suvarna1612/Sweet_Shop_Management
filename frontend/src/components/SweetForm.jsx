@@ -3,27 +3,47 @@ import React, { useState, useEffect } from 'react';
 const SweetForm = ({ sweet, onSubmit, onCancel, loading }) => {
   const [formData, setFormData] = useState({
     name: '',
-    category: 'Chocolate',
+    category: 'Bengali Sweets',
     price: '',
     quantity: '',
     description: '',
-    imageUrl: ''
+    image: ''
   });
   const [errors, setErrors] = useState({});
 
-  const categories = ['Chocolate', 'Candy', 'Gummy', 'Hard Candy', 'Lollipop', 'Other'];
+  const categories = [
+    'Bengali Sweets',
+    'Dry Fruit Sweets', 
+    'Milk Sweets',
+    'Pure Ghee Sweets',
+    'Sugarless Sweets',
+    'Chocolates'
+  ];
 
   useEffect(() => {
     if (sweet) {
+      // Editing existing sweet
       setFormData({
         name: sweet.name || '',
-        category: sweet.category || 'Chocolate',
+        category: sweet.category || 'Bengali Sweets',
         price: sweet.price?.toString() || '',
         quantity: sweet.quantity?.toString() || '',
         description: sweet.description || '',
-        imageUrl: sweet.imageUrl || ''
+        image: sweet.image || ''
+      });
+    } else {
+      // Creating new sweet - reset to defaults
+      setFormData({
+        name: '',
+        category: 'Bengali Sweets',
+        price: '',
+        quantity: '',
+        description: '',
+        image: ''
       });
     }
+    // Clear any previous errors
+    setErrors({});
   }, [sweet]);
 
   const validateForm = () => {
@@ -39,24 +59,26 @@ const SweetForm = ({ sweet, onSubmit, onCancel, loading }) => {
       newErrors.category = 'Category is required';
     }
 
-    if (!formData.price) {
+    if (!formData.price || formData.price.trim() === '') {
       newErrors.price = 'Price is required';
     } else if (isNaN(formData.price) || parseFloat(formData.price) < 0) {
       newErrors.price = 'Price must be a positive number';
     }
 
-    if (!formData.quantity) {
+    if (!formData.quantity || formData.quantity.trim() === '') {
       newErrors.quantity = 'Quantity is required';
     } else if (isNaN(formData.quantity) || parseInt(formData.quantity) < 0 || !Number.isInteger(parseFloat(formData.quantity))) {
       newErrors.quantity = 'Quantity must be a non-negative integer';
     }
 
-    if (formData.description && formData.description.length > 500) {
+    if (!formData.description.trim()) {
+      newErrors.description = 'Description is required';
+    } else if (formData.description.length > 500) {
       newErrors.description = 'Description cannot exceed 500 characters';
     }
 
-    if (formData.imageUrl && !isValidUrl(formData.imageUrl)) {
-      newErrors.imageUrl = 'Please enter a valid URL';
+    if (formData.image && !isValidUrl(formData.image)) {
+      newErrors.image = 'Please enter a valid URL';
     }
 
     setErrors(newErrors);
@@ -97,10 +119,11 @@ const SweetForm = ({ sweet, onSubmit, onCancel, loading }) => {
 
     const submitData = {
       ...formData,
-      price: parseFloat(formData.price),
-      quantity: parseInt(formData.quantity)
+      price: parseFloat(formData.price) || 0,
+      quantity: parseInt(formData.quantity) || 0
     };
 
+    console.log('Frontend submitting data:', submitData);
     onSubmit(submitData);
   };
 
@@ -179,13 +202,13 @@ const SweetForm = ({ sweet, onSubmit, onCancel, loading }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="description" className="form-label">Description</label>
+          <label htmlFor="description" className="form-label">Description *</label>
           <textarea
             id="description"
             name="description"
             value={formData.description}
             onChange={handleChange}
-            placeholder="Enter sweet description (optional)"
+            placeholder="Enter sweet description"
             rows="3"
             disabled={loading}
             className="form-textarea"
@@ -194,18 +217,18 @@ const SweetForm = ({ sweet, onSubmit, onCancel, loading }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="imageUrl" className="form-label">Image URL</label>
+          <label htmlFor="image" className="form-label">Image URL</label>
           <input
             type="url"
-            id="imageUrl"
-            name="imageUrl"
-            value={formData.imageUrl}
+            id="image"
+            name="image"
+            value={formData.image}
             onChange={handleChange}
             placeholder="https://example.com/image.jpg (optional)"
             disabled={loading}
             className="form-input"
           />
-          {errors.imageUrl && <div className="form-error">{errors.imageUrl}</div>}
+          {errors.image && <div className="form-error">{errors.image}</div>}
         </div>
 
         <div className="form-actions">

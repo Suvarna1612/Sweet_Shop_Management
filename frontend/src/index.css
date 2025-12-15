@@ -86,11 +86,24 @@ h3 { font-size: 1.5rem; }
 .logo {
   font-size: 1.8rem;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: white;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.logo:hover {
+  color: var(--primary-color);
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  border-radius: 8px;
 }
 
 .nav-links {
@@ -100,7 +113,7 @@ h3 { font-size: 1.5rem; }
 }
 
 .nav-link {
-  color: var(--text-secondary);
+  color: white;
   text-decoration: none;
   font-weight: 500;
   transition: var(--transition);
@@ -110,12 +123,12 @@ h3 { font-size: 1.5rem; }
 
 .nav-link:hover {
   color: var(--primary-color);
-  background: rgba(255, 107, 107, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .nav-link.active {
   color: var(--primary-color);
-  background: rgba(255, 107, 107, 0.15);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Main Content */
@@ -523,10 +536,8 @@ h3 { font-size: 1.5rem; }
 .auth-title {
   font-size: 2rem;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: white;
+  font-weight: 700;
 }
 
 .auth-subtitle {

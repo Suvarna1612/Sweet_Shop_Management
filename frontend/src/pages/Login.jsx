@@ -22,9 +22,10 @@ const Login = () => {
     }
   }, [isAuthenticated, navigate, from]);
 
+  // Clear error only when component mounts, not on every render
   useEffect(() => {
     clearError();
-  }, [clearError]);
+  }, []); // Empty dependency array
 
   const validateForm = () => {
     const newErrors = {};
@@ -50,7 +51,7 @@ const Login = () => {
       [name]: value
     }));
     
-    // Clear error when user starts typing
+    // Clear field-specific error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -58,7 +59,10 @@ const Login = () => {
       }));
     }
     
-    clearError();
+    // Only clear global error if there was one and user is making changes
+    if (error) {
+      clearError();
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -74,6 +78,10 @@ const Login = () => {
 
     if (result.success) {
       navigate(from, { replace: true });
+    } else {
+      // Error is already set in AuthContext, just log it for debugging
+      console.error('Login failed:', result.error);
+      console.log('Current error state:', error);
     }
   };
 
@@ -83,8 +91,8 @@ const Login = () => {
     clearError();
     
     const adminCredentials = {
-      email: 'admin@sweetshop.com',
-      password: 'Admin123'
+      email: 'admin@sksweets.com',
+      password: 'Admin@123'
     };
 
     console.log('Attempting admin login with:', adminCredentials);
@@ -112,18 +120,11 @@ const Login = () => {
       <div className="auth-card">
         <div className="auth-header">
           <h1 className="auth-title">Welcome Back</h1>
-          <p className="auth-subtitle">Sign in to your sweet shop account</p>
+          <p className="auth-subtitle">Sign in to your Sri Krishna Sweets account</p>
         </div>
         
         {error && (
-          <div style={{ 
-            background: 'var(--danger-color)', 
-            color: 'white', 
-            padding: '1rem', 
-            borderRadius: 'var(--border-radius)', 
-            marginBottom: '1.5rem',
-            textAlign: 'center'
-          }}>
+          <div className="alert alert-error">
             {error}
           </div>
         )}
@@ -142,11 +143,7 @@ const Login = () => {
               autoComplete="email"
               className="form-input"
             />
-            {errors.email && (
-              <div style={{ color: 'var(--danger-color)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
-                {errors.email}
-              </div>
-            )}
+            {errors.email && <div className="form-error">{errors.email}</div>}
           </div>
 
           <div className="form-group">
@@ -162,11 +159,7 @@ const Login = () => {
               autoComplete="current-password"
               className="form-input"
             />
-            {errors.password && (
-              <div style={{ color: 'var(--danger-color)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
-                {errors.password}
-              </div>
-            )}
+            {errors.password && <div className="form-error">{errors.password}</div>}
           </div>
 
           <button
@@ -190,19 +183,6 @@ const Login = () => {
         >
           {loading ? 'Signing In as Admin...' : '🔑 Admin Login'}
         </button>
-        
-        <div style={{ 
-          background: 'var(--bg-input)', 
-          padding: '1rem', 
-          borderRadius: 'var(--border-radius)', 
-          marginTop: '1rem',
-          fontSize: '0.8rem',
-          color: 'var(--text-muted)',
-          textAlign: 'center'
-        }}>
-          <strong>Demo Credentials:</strong><br />
-          <code style={{ color: 'var(--secondary-color)' }}>admin@sweetshop.com</code> / Admin123
-        </div>
 
         <div className="auth-footer">
           <p>

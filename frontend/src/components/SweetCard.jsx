@@ -54,24 +54,24 @@ const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, onRestock, isAdminView
 
   const getCategoryColor = (category) => {
     const colors = {
-      'Chocolate': '#8B4513',
-      'Candy': '#FF69B4', 
-      'Gummy': '#32CD32',
-      'Hard Candy': '#FF6347',
-      'Lollipop': '#FFD700',
-      'Other': '#9370DB'
+      'Bengali Sweets': '#FF6B35',
+      'Dry Fruit Sweets': '#8B4513', 
+      'Milk Sweets': '#F7DC6F',
+      'Pure Ghee Sweets': '#FFD700',
+      'Sugarless Sweets': '#32CD32',
+      'Chocolates': '#8B4513'
     };
     return colors[category] || '#FF69B4';
   };
 
   const getCategoryColorDark = (category) => {
     const colors = {
-      'Chocolate': '#654321',
-      'Candy': '#C1477C', 
-      'Gummy': '#228B22',
-      'Hard Candy': '#CD5C5C',
-      'Lollipop': '#DAA520',
-      'Other': '#663399'
+      'Bengali Sweets': '#E55A2B',
+      'Dry Fruit Sweets': '#654321', 
+      'Milk Sweets': '#F4D03F',
+      'Pure Ghee Sweets': '#DAA520',
+      'Sugarless Sweets': '#228B22',
+      'Chocolates': '#654321'
     };
     return colors[category] || '#C1477C';
   };
@@ -79,9 +79,9 @@ const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, onRestock, isAdminView
   return (
     <div className="sweet-card">
       <div className="sweet-image-container">
-        {sweet.imageUrl && !imageError ? (
+        {sweet.image && !imageError ? (
           <img 
-            src={sweet.imageUrl} 
+            src={sweet.image} 
             alt={sweet.name}
             onError={handleImageError}
             onLoad={handleImageLoad}
@@ -90,7 +90,7 @@ const SweetCard = ({ sweet, onPurchase, onEdit, onDelete, onRestock, isAdminView
           />
         ) : null}
         
-        {(imageError || !sweet.imageUrl || imageLoading) && (
+        {(imageError || !sweet.image || imageLoading) && (
           <div className="sweet-fallback" style={{
             background: `linear-gradient(135deg, ${getCategoryColor(sweet.category)}, ${getCategoryColorDark(sweet.category)})`
           }}>

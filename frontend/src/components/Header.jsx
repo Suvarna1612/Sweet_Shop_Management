@@ -16,7 +16,8 @@ const Header = () => {
       <div className="container">
         <div className="header-content">
           <Link to="/" className="logo">
-            🍭 Sweet Shop
+            <img src="/image.png" alt="Sri Krishna Sweets Logo" className="logo-icon" />
+            Sri Krishna Sweets
           </Link>
           
           {isAuthenticated() ? (

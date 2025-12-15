@@ -7,14 +7,36 @@ const SearchFilter = ({ onSearch, loading }) => {
     maxPrice: ''
   });
 
-  const categories = ['', 'Chocolate', 'Candy', 'Gummy', 'Hard Candy', 'Lollipop', 'Other'];
+  const categories = [
+    '', // Empty option for "All Categories"
+    'Bengali Sweets',
+    'Dry Fruit Sweets', 
+    'Milk Sweets',
+    'Pure Ghee Sweets',
+    'Sugarless Sweets',
+    'Chocolates'
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSearchParams(prev => ({
-      ...prev,
+    const updatedParams = {
+      ...searchParams,
       [name]: value
-    }));
+    };
+    setSearchParams(updatedParams);
+    
+    // Auto-search when category changes
+    if (name === 'category') {
+      const filteredParams = Object.entries(updatedParams).reduce((acc, [key, value]) => {
+        if (value && value.toString().trim()) {
+          acc[key] = value.toString().trim();
+        }
+        return acc;
+      }, {});
+      
+      console.log('SearchFilter category changed, auto-searching with params:', filteredParams);
+      onSearch(filteredParams);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -28,6 +50,7 @@ const SearchFilter = ({ onSearch, loading }) => {
       return acc;
     }, {});
 
+    console.log('SearchFilter handleSubmit called with params:', filteredParams);
     onSearch(filteredParams);
   };
 
@@ -46,6 +69,7 @@ const SearchFilter = ({ onSearch, loading }) => {
       return acc;
     }, {});
     
+    console.log('SearchFilter handlePriceRangeSelect called with params:', filteredParams);
     onSearch(filteredParams);
   };
 
@@ -63,18 +87,28 @@ const SearchFilter = ({ onSearch, loading }) => {
     <div className="search-sidebar">
       <h3 className="search-title">Filters</h3>
       
-      <div className="filter-section">
-        <div className="filter-title">Search</div>
-        <input
-          type="text"
-          name="name"
-          value={searchParams.name}
-          onChange={handleChange}
-          placeholder="Search sweets..."
-          className="form-input"
-          disabled={loading}
-        />
-      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="filter-section">
+          <div className="filter-title">Search</div>
+          <input
+            type="text"
+            name="name"
+            value={searchParams.name}
+            onChange={handleChange}
+            placeholder="Search sweets..."
+            className="form-input"
+            disabled={loading}
+          />
+          <button
+            type="submit"
+            className="btn btn-primary w-full"
+            disabled={loading}
+            style={{ marginTop: '0.5rem' }}
+          >
+            {loading ? 'Searching...' : 'Search'}
+          </button>
+        </div>
+      </form>
 
       <div className="filter-section">
         <div className="filter-title">Category</div>
@@ -98,6 +132,18 @@ const SearchFilter = ({ onSearch, loading }) => {
         <div className="filter-title">Price Range</div>
         <div className="price-chips">
           <div
+            className={`price-chip ${searchParams.maxPrice === '20' ? 'active' : ''}`}
+            onClick={() => handlePriceRangeSelect('20')}
+          >
+            Under ₹20
+          </div>
+          <div
+            className={`price-chip ${searchParams.maxPrice === '40' ? 'active' : ''}`}
+            onClick={() => handlePriceRangeSelect('40')}
+          >
+            Under ₹40
+          </div>
+          <div
             className={`price-chip ${searchParams.maxPrice === '50' ? 'active' : ''}`}
             onClick={() => handlePriceRangeSelect('50')}
           >
@@ -108,18 +154,6 @@ const SearchFilter = ({ onSearch, loading }) => {
             onClick={() => handlePriceRangeSelect('100')}
           >
             Under ₹100
-          </div>
-          <div
-            className={`price-chip ${searchParams.maxPrice === '200' ? 'active' : ''}`}
-            onClick={() => handlePriceRangeSelect('200')}
-          >
-            Under ₹200
-          </div>
-          <div
-            className={`price-chip ${searchParams.maxPrice === '500' ? 'active' : ''}`}
-            onClick={() => handlePriceRangeSelect('500')}
-          >
-            Under ₹500
           </div>
           <div
             className={`price-chip ${searchParams.maxPrice === '' ? 'active' : ''}`}

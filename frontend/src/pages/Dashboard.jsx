@@ -23,8 +23,10 @@ const Dashboard = () => {
       
       let response;
       if (Object.keys(params).length > 0) {
+        console.log('Calling sweetAPI.search with params:', params);
         response = await sweetAPI.search(params);
       } else {
+        console.log('Calling sweetAPI.getAll()');
         response = await sweetAPI.getAll();
       }
       
@@ -39,6 +41,7 @@ const Dashboard = () => {
   };
 
   const handleSearch = (params) => {
+    console.log('Frontend handleSearch called with params:', params);
     loadSweets(params);
   };
 
@@ -73,7 +76,7 @@ const Dashboard = () => {
     <div className="main-content">
       <div className="container">
         <div style={{ marginBottom: '2rem' }}>
-          <h1>Sweet Shop</h1>
+          <h1>Sri Krishna Sweets</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>
             Welcome back, {user?.username}! 
             {user?.role && (
@@ -92,7 +95,7 @@ const Dashboard = () => {
             )}
           </p>
           <p style={{ color: 'var(--text-muted)' }}>
-            Browse and purchase your favorite treats from our sweet collection.
+            Discover the finest traditional sweets from our 30-year legacy of authentic flavors and quality craftsmanship.
           </p>
         </div>
 
